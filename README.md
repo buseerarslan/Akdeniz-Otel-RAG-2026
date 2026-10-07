@@ -25,33 +25,34 @@ Bu proje, **Akdeniz Otel ve Resort 2026** misafir el kitabı (unstructured PDF) 
 Sistem, kullanıcı sorularını türüne göre analiz ederek doğru veri kaynağına yönlendiren hibrit bir yapıya sahiptir:
 
 +-----------------------+
-|   Kullanıcı Sorusu    |
-+-----------+-----------+
-            |
-            v
-+-----------------------+
-|   Soru Tipi Tespiti   |
-+-----+-----------+-----+
-      |           |
- [Otel Kuralları & Saatler] |           | [Oda Fiyatları & Kapasite]
-      v           v
-  +---------------------+       +---------------------+
-  |   PDF RAG Chain     |       |   CSV Tool (@tool)  |
-  | (Vector Retrieval)  |       |  (Pandas Filtering) |
-  +----------+----------+       +----------+----------+
-             |                             |
-             +--------------+--------------+
-                            |
-                            v
-                +-----------------------+
-                |  Gemini 2.5 Flash LLM |
-                +-----------+-----------+
-                            |
-                            v
-                +-----------------------+
-                |  Güvenilir Yanıt /    |
-                |  "Bilgi Bulunamadı"   |
-                +-----------------------+
+                              |   Kullanıcı Sorusu    |
+                              +-----------+-----------+
+                                          |
+                                          v
+                              +-----------------------+
+                              |   Soru Tipi Tespiti   |
+                              +-----+-----------+-----+
+                                    |           |
+        [Otel Kuralları & Saatler] |           | [Oda Fiyatları & Kapasite]
+                                    v           v
+                +---------------------+       +---------------------+
+                |   PDF RAG Chain     |       |   CSV Tool (@tool)  |
+                | (Vector Retrieval)  |       |  (Pandas Filtering) |
+                +----------+----------+       +----------+----------+
+                           |                             |
+                           +--------------+--------------+
+                                          |
+                                          v
+                              +-----------------------+
+                              |  Gemini 2.5 Flash LLM |
+                              +-----------+-----------+
+                                          |
+                                          v
+                              +-----------------------+
+                              |  Güvenilir Yanıt /    |
+                              |  "Bilgi Bulunamadı"   |
+                              +-----------------------+
+
 
 ---
 
@@ -96,3 +97,35 @@ Sistem, kullanıcı sorularını türüne göre analiz ederek doğru veri kayna�
    ```bash
    git clone [https://github.com/KULLANICI_ADI/Akdeniz-Otel-RAG-2026.git](https://github.com/KULLANICI_ADI/Akdeniz-Otel-RAG-2026.git)
    cd Akdeniz-Otel-RAG-2026
+
+
+   Gerekli Paketleri Yükleyin:
+
+   pip install -qU langchain langchain-community langchain-huggingface langchain-chroma pypdf pandas sentence-transformers google-genai
+
+
+   Google Colab Üzerinde Çalıştırma:
+Akdeniz_Otel_RAG_Asistani_2026.ipynb dosyasını Google Colab'da açıp Open in Colab butonuna basarak tüm hücreleri sırayla çalıştırabilirsiniz.
+
+🚀 Gelecek Yol Haritası ve Geliştirme Önerileri (Future Work)
+Sistemin v2.0 ve v3.0 sürümlerinde üretim ortamına (production) taşınması için planlanan geliştirmeler:
+
+1. Kullanıcı Arayüzü (UI/UX) Entegrasyonu (v2.0)
+Gradio / Streamlit Web App: Kullanıcıların doğrudan canlı mesajlaşabileceği modüler bir sohbet arayüzünün (Chatbot UI) entegre edilmesi.
+
+Sesli Asistan Entegrasyonu: Google Whisper / TTS modelleri ile sesli soru-cevap desteğinin eklenmesi.
+
+2. İleri Seviye RAG Mimarileri (v2.5)
+Hybrid Search (Sparse + Dense): ChromaDB vektör aramasına BM25 (anahtar kelime tabanlı arama) eklenerek Hybrid Search yapısının kurulması.
+
+Re-ranking (Yeniden Sıralama): Retrieve edilen doküman parçalarının Cohere Rerank veya BGE-Reranker ile yeniden sıralanarak doğruluk oranının %99'a çıkarılması.
+
+Parent-Document Retriever: Metin parçaları küçük chunk'lar halinde aranırken, LLM'e tüm paragrafın (parent context) beslenmesi.
+
+3. Agentic Workflow & Çoklu Veritabanı (v3.0)
+LangGraph Entegrasyonu: Statik LCEL zinciri yerine kararları dinamik veren, hata durumunda sorguyu yeniden yazan (Self-RAG / Corrective RAG) bir Agent mimarisine geçilmesi.
+
+Canlı SQL Veritabanı: Oda musaitlik durumları ve canlı rezervasyonlar için PostgreSQL / MySQL veritabanı bağlayıcı araçlarının (SQL Database Tools) eklenmesi.
+
+📜 Lisans ve Teşekkür
+Bu proje akademik değerlendirme ve prototip geliştirme amacıyla hazırlanmıştır. Katkıda bulunan tüm açık kaynak LangChain ve HuggingFace topluluğuna teşekkür ederiz.
